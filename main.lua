@@ -27,6 +27,10 @@ function love.draw()
     -- Each value (Red, Green, Blue, Alpha) is divided by 255 as LOVE uses a scale of 0-1.
     love.graphics.clear(40 /255, 45 / 255, 52 / 255, 255/255)
 
+    love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 5, 5)
+    love.graphics.rectangle("fill", 5, 40, 5, 20)
+    love.graphics.rectangle("fill", VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 60, 5, 20)
+
     love.graphics.printf(
         "Hello Pong!", -- String to print
         0,             -- Position on x-axis 

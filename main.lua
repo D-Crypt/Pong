@@ -21,14 +21,18 @@ function love.load()
 end
 
 function love.draw()
-    push:apply("start")
+    push:apply("start") -- Render at virtual resolution
+
+    -- Change canvas colour with RGB manipulation
+    -- Each value (Red, Green, Blue, Alpha) is divided by 255 as LOVE uses a scale of 0-1.
+    love.graphics.clear(40 /255, 45 / 255, 52 / 255, 255/255)
 
     love.graphics.printf(
-        "Hello Pong!",            -- String to print
-        0,                        -- Position on x-axis 
-        (VIRTUAL_HEIGHT / 2) - 6, -- Position on y-axis
-        VIRTUAL_WIDTH,            -- Wrap the line after this many horizontal pixels
-        "center")                 -- Alignment
+        "Hello Pong!", -- String to print
+        0,             -- Position on x-axis 
+        20,            -- Position on y-axis
+        VIRTUAL_WIDTH, -- Wrap the line after this many horizontal pixels
+        "center")      -- Alignment
 
     push:apply("end")
 end

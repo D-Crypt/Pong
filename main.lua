@@ -1,16 +1,24 @@
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
+-- Virtual resolution to emulate retro visuals (i.e. similar resolution to the NES)
+VIRTUAL_WIDTH = 432
+VIRTUAL_HEIGHT = 243
+
+push = require "push"
+
 function love.load()
-    love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, {
+    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         vsync = true,
         resizable = false
-    })
+    }) 
 end
 
 function love.draw()
-    love.graphics.printf("Hello Pong!", 0, (WINDOW_HEIGHT / 2) - 6, WINDOW_WIDTH, "center")
+    push:apply("start")
+    love.graphics.printf("Hello Pong!", 0, (VIRTUAL_HEIGHT / 2) - 6, VIRTUAL_WIDTH, "center")
+    push:apply("end")
 end
 
 function love.keypressed(key)

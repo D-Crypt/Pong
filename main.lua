@@ -9,6 +9,10 @@ push = require "push"
 
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
+
+    smallFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 8)
+    love.graphics.setFont(smallFont)
+
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         vsync = true,

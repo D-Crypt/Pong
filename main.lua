@@ -18,7 +18,14 @@ end
 
 function love.draw()
     push:apply("start")
-    love.graphics.printf("Hello Pong!", 0, (VIRTUAL_HEIGHT / 2) - 6, VIRTUAL_WIDTH, "center")
+
+    love.graphics.printf(
+        "Hello Pong!",            -- String to print
+        0,                        -- Position on x-axis 
+        (VIRTUAL_HEIGHT / 2) - 6, -- Position on y-axis
+        VIRTUAL_WIDTH,            -- Wrap the line after this many horizontal pixels
+        "center")                 -- Alignment
+
     push:apply("end")
 end
 

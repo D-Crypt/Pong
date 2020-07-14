@@ -10,5 +10,11 @@ function love.load()
 end
 
 function love.draw()
-    love.graphics.printf("Hello Pong!", 0, (WINDOW_HEIGHT / 2) - 6, WINDOW_WIDTH, 'center')
+    love.graphics.printf("Hello Pong!", 0, (WINDOW_HEIGHT / 2) - 6, WINDOW_WIDTH, "center")
+end
+
+function love.keypressed(key)
+    if key == "escape" then
+        love.event.quit()
+    end
 end

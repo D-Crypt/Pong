@@ -15,20 +15,7 @@ function love.load()
     smallFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 8)
     scoreFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 16)
 
-    player1Score = 0
-    player2Score = 0
-
-    player1Y = 40
-    player2Y = VIRTUAL_HEIGHT - 60
-
-    player1X = 5
-    player2X = VIRTUAL_WIDTH - 10
-
-    ballX = VIRTUAL_WIDTH / 2 - 2
-    ballY = VIRTUAL_HEIGHT / 2 - 2
-
-    ballDX = math.random(2) == 1 and -100 or 100
-    ballDY = math.random(-50, 50)
+    resetGame()
     
     gameState = "start"
 
@@ -42,7 +29,7 @@ end
 function love.update(dt)
     -- Player 1 controls
     if love.keyboard.isDown("w") then
-        -- The max and min functions prevent objects from moving beyond the canvas boundaries
+        -- The max and min functions prevenetGame from moving beyond the canvas boundaries
         player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
     elseif love.keyboard.isDown("s") then
         player1Y = math.min(VIRTUAL_HEIGHT - 20, player1Y + PADDLE_SPEED * dt)
@@ -96,15 +83,25 @@ function love.keypressed(key)
             gameState = "play"
         else
             gameState = "start"
-            reset()
+            resetGame()
         end
     end
 end
 
-function reset()
+function resetGame()
+    player1Score = 0
+    player2Score = 0
+
+    player1Y = 40
+    player2Y = VIRTUAL_HEIGHT - 60
+
+    player1X = 5
+    player2X = VIRTUAL_WIDTH - 10
+
     ballX = VIRTUAL_WIDTH / 2 - 2
     ballY = VIRTUAL_HEIGHT / 2 - 2
 
+    -- "DX" means delta of x, i.e. the velocity of the ball across the two axes
     ballDX = math.random(2) == 1 and -100 or 100
     ballDY = math.random(-50, 50)
 end

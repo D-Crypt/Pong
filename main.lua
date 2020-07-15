@@ -24,6 +24,14 @@ function love.load()
     player1X = 5
     player2X = VIRTUAL_WIDTH - 10
 
+    ballX = VIRTUAL_WIDTH / 2 - 2
+    ballY = VIRTUAL_HEIGHT / 2 - 2
+
+    ballDX = math.random(2) == 1 and -100 or 100
+    ballDY = math.random(-50, 50)
+    
+    gameState = "start"
+
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         vsync = true,
@@ -47,6 +55,11 @@ function love.update(dt)
         player2Y = math.min(VIRTUAL_HEIGHT - 20, player2Y + PADDLE_SPEED * dt)
     end
 
+    if gameState == "play" then
+        ballX = ballX + ballDX * dt
+        ballY = ballY + ballDY * dt
+    end
+
 end
 
 function love.draw()
@@ -68,7 +81,7 @@ function love.draw()
     love.graphics.print(player1Score, VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 5)
     love.graphics.print(player2Score, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 5)
 
-    love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4) -- Ball
+    love.graphics.rectangle("fill", ballX, ballY, 4, 4) -- Ball
     love.graphics.rectangle("fill", player1X, player1Y, 5, 20) -- Left paddle
     love.graphics.rectangle("fill", player2X, player2Y, 5, 20) -- Right paddle
 
@@ -78,5 +91,20 @@ end
 function love.keypressed(key)
     if key == "escape" then
         love.event.quit()
+    elseif key == "space" then
+        if gameState == "start" then
+            gameState = "play"
+        else
+            gameState = "start"
+            reset()
+        end
     end
+end
+
+function reset()
+    ballX = VIRTUAL_WIDTH / 2 - 2
+    ballY = VIRTUAL_HEIGHT / 2 - 2
+
+    ballDX = math.random(2) == 1 and -100 or 100
+    ballDY = math.random(-50, 50)
 end

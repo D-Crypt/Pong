@@ -5,6 +5,8 @@ WINDOW_HEIGHT = 720
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
+PADDLE_SPEED = 200
+
 push = require "push"
 
 function love.load()
@@ -16,12 +18,33 @@ function love.load()
     player1Score = 0
     player2Score = 0
 
+    player1Y = 40
+    player2Y = VIRTUAL_HEIGHT - 60
+
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         vsync = true,
         resizable = false
     }) 
 end
+
+function love.update(dt)
+    if love.keyboard.isDown("w") then
+        player1Y = player1Y - PADDLE_SPEED * dt
+    elseif love.keyboard.isDown("s") then
+        player1Y = player1Y + PADDLE_SPEED * dt
+    end
+
+    if love.keyboard.isDown("up") then
+        player2Y = player2Y - PADDLE_SPEED * dt
+    elseif love.keyboard.isDown("down") then
+        player2Y = player2Y + PADDLE_SPEED * dt
+    end
+
+end
+
+
+
 
 function love.draw()
     push:apply("start") -- Render at virtual resolution
@@ -43,8 +66,8 @@ function love.draw()
     love.graphics.print(player2Score, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 5)
 
     love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4) -- Ball
-    love.graphics.rectangle("fill", 5, 40, 5, 20) -- Left paddle
-    love.graphics.rectangle("fill", VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 60, 5, 20) -- Right paddle
+    love.graphics.rectangle("fill", 5, player1Y, 5, 20) -- Left paddle
+    love.graphics.rectangle("fill", VIRTUAL_WIDTH - 10, player2Y, 5, 20) -- Right paddle
 
     push:apply("end")
 end

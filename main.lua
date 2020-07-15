@@ -57,12 +57,12 @@ function love.draw()
     love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
 
     love.graphics.setFont(smallFont)
-    love.graphics.printf(
-        "Hello Pong!", -- String to print
-        0,             -- Position on x-axis 
-        20,            -- Position on y-axis
-        VIRTUAL_WIDTH, -- Wrap the line after this many horizontal pixels
-        "center")      -- Alignment
+
+    if gameState == "start" then
+        love.graphics.printf("State = Start!", 0, 20, VIRTUAL_WIDTH, "center") 
+    else
+        love.graphics.printf("State = Play!", 0, 20, VIRTUAL_WIDTH, "center")
+    end
 
     love.graphics.setFont(scoreFont)
     love.graphics.print(player1Score, VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 5)

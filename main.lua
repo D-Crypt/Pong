@@ -11,7 +11,10 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
 
     smallFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 8)
-    love.graphics.setFont(smallFont)
+    scoreFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 16)
+
+    player1Score = 0
+    player2Score = 0
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -25,18 +28,23 @@ function love.draw()
 
     -- Change canvas colour with RGB manipulation
     -- Each value (Red, Green, Blue, Alpha) is divided by 255 as LOVE uses a scale of 0-1.
-    love.graphics.clear(40 /255, 45 / 255, 52 / 255, 255/255)
+    love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
 
-    love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 5, 5)
-    love.graphics.rectangle("fill", 5, 40, 5, 20)
-    love.graphics.rectangle("fill", VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 60, 5, 20)
-
+    love.graphics.setFont(smallFont)
     love.graphics.printf(
         "Hello Pong!", -- String to print
         0,             -- Position on x-axis 
         20,            -- Position on y-axis
         VIRTUAL_WIDTH, -- Wrap the line after this many horizontal pixels
         "center")      -- Alignment
+
+    love.graphics.setFont(scoreFont)
+    love.graphics.print(player1Score, VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 5)
+    love.graphics.print(player2Score, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 5)
+
+    love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4) -- Ball
+    love.graphics.rectangle("fill", 5, 40, 5, 20) -- Left paddle
+    love.graphics.rectangle("fill", VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 60, 5, 20) -- Right paddle
 
     push:apply("end")
 end

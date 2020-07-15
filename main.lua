@@ -1,7 +1,7 @@
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
--- Virtual resolution to emulate retro visuals (i.e. similar resolution to the NES)
+-- Virtual resolution to emulate retro visuals
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
@@ -21,6 +21,9 @@ function love.load()
     player1Y = 40
     player2Y = VIRTUAL_HEIGHT - 60
 
+    player1X = 5
+    player2X = VIRTUAL_WIDTH - 10
+
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         vsync = true,
@@ -29,22 +32,22 @@ function love.load()
 end
 
 function love.update(dt)
+    -- Player 1 controls
     if love.keyboard.isDown("w") then
-        player1Y = player1Y - PADDLE_SPEED * dt
+        -- The max and min functions prevent objects from moving beyond the canvas boundaries
+        player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
     elseif love.keyboard.isDown("s") then
-        player1Y = player1Y + PADDLE_SPEED * dt
+        player1Y = math.min(VIRTUAL_HEIGHT - 20, player1Y + PADDLE_SPEED * dt)
     end
 
+    -- Player 2 controls
     if love.keyboard.isDown("up") then
-        player2Y = player2Y - PADDLE_SPEED * dt
+        player2Y = math.max(0, player2Y - PADDLE_SPEED * dt)
     elseif love.keyboard.isDown("down") then
-        player2Y = player2Y + PADDLE_SPEED * dt
+        player2Y = math.min(VIRTUAL_HEIGHT - 20, player2Y + PADDLE_SPEED * dt)
     end
 
 end
-
-
-
 
 function love.draw()
     push:apply("start") -- Render at virtual resolution
@@ -66,8 +69,8 @@ function love.draw()
     love.graphics.print(player2Score, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 5)
 
     love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4) -- Ball
-    love.graphics.rectangle("fill", 5, player1Y, 5, 20) -- Left paddle
-    love.graphics.rectangle("fill", VIRTUAL_WIDTH - 10, player2Y, 5, 20) -- Right paddle
+    love.graphics.rectangle("fill", player1X, player1Y, 5, 20) -- Left paddle
+    love.graphics.rectangle("fill", player2X, player2Y, 5, 20) -- Right paddle
 
     push:apply("end")
 end

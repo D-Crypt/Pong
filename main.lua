@@ -20,9 +20,13 @@ function love.load()
     smallFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 8)
     scoreFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 16)
 
+    player1Score = 0
+    player2Score = 0
+
+    hitCounter = 0
+    hiScore = 0
+
     resetGame()
-    
-    gameState = "start"
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -35,27 +39,36 @@ function love.update(dt)
     if ball:collides(paddle1) or ball:collides(paddle2) then  
         -- Speed up ball based on how many times it has been hit      
         if ball.dx < 0 then
-            ball.dx = ball.dx - ball.hitCounter
+            ball.dx = ball.dx - hitCounter
         else
-            ball.dx = ball.dx + ball.hitCounter
+            ball.dx = ball.dx + hitCounter
         end
 
         -- deflect ball to the opposite direction
         ball.dx = -ball.dx
 
-        ball.hitCounter = ball.hitCounter + 1
+        hitCounter = hitCounter + 1
     end
 
     if ball.y <= 0 then
-        -- deflect ball down and reset its position if it moves out of bounds
+        -- Deflect ball down and reset its position if it moves out of bounds
         ball.y = 0
         ball.dy = -ball.dy
     end
 
     if ball.y >= VIRTUAL_HEIGHT - 4 then
-        -- deflect ball up and reset its position if it moves out of bounds
+        -- Deflect ball up and reset its position if it moves out of bounds
         ball.y = VIRTUAL_HEIGHT - 4
         ball.dy = -ball.dy
+    end
+
+    -- Update scores
+    if ball.x >= VIRTUAL_WIDTH - 4 then
+        player1Score = player1Score + 1
+        resetGame()
+    elseif ball.x <= 0 then
+        player2Score = player2Score + 1
+        resetGame()
     end
 
     paddle1:update(dt)
@@ -95,9 +108,9 @@ function love.draw()
     love.graphics.setFont(smallFont)
 
     if gameState == "start" then
-        love.graphics.printf("Press Space to start!", 0, 20, VIRTUAL_WIDTH, "center") 
+        love.graphics.printf("PRESS SPACE TO START!", 0, 20, VIRTUAL_WIDTH, "center") 
     else
-        love.graphics.printf("Hits = " .. tostring (ball.hitCounter - 1), 0, 20, VIRTUAL_WIDTH, "center")
+        love.graphics.printf("Hits = " .. tostring (hitCounter), 0, 20, VIRTUAL_WIDTH, "center")
     end
 
     love.graphics.setFont(scoreFont)
@@ -109,6 +122,7 @@ function love.draw()
     paddle2:render()
 
     displayFPS()
+    displayHiScore()
 
     push:apply("end")
 end
@@ -119,26 +133,33 @@ function love.keypressed(key)
     elseif key == "space" then
         if gameState == "start" then
             gameState = "play"
-        else
-            gameState = "start"
-            resetGame()
         end
     end
 end
 
 function resetGame()
-    player1Score = 0
-    player2Score = 0
-
+    gameState = "start"
     paddle1 = Paddle(5, VIRTUAL_HEIGHT / 2 - 10, 5, 20)
     paddle2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT / 2 - 10, 5, 20)
-
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
+
+    if hiScore < hitCounter then
+        hiScore = hitCounter
+    end
+
+    hitCounter = 0
 end
 
 function displayFPS()
     love.graphics.setColor(0, 1, 0, 1)
     love.graphics.setFont(smallFont)
     love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 0, 0)
-    love.graphics.setColor(1, 1, 1, 1) -- set colour back to white for other objects being drawn
+    love.graphics.setColor(1, 1, 1, 1) -- Det colour back to white for other objects being drawn
+end
+
+function displayHiScore()
+    love.graphics.setColor(0, 0, 1, 1)
+    love.graphics.setFont(smallFont)
+    love.graphics.print("HI-SCORE: " .. tostring (hiScore), VIRTUAL_WIDTH - 110, 0)
+    love.graphics.setColor(1, 1, 1, 1)
 end

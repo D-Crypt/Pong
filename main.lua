@@ -14,7 +14,7 @@ VIRTUAL_HEIGHT = 243
 PADDLE_SPEED = 200
 
 function love.load()
-    love.graphics.setDefaultFilter("nearest", "nearest")
+    love.graphics.setDefaultFilter("nearest", "nearest") -- Removes blur from default filter
 
     smallFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 8)
     scoreFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 16)
@@ -61,10 +61,10 @@ end
 function love.draw()
     push:apply("start") -- Render at virtual resolution
 
-    -- Change canvas colour with RGB manipulation
+    -- Change canvas colour with RGBA manipulation
     -- Each value (Red, Green, Blue, Alpha) is divided by 255 as LOVE uses a scale of 0-1.
     love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
-
+    
     love.graphics.setFont(smallFont)
 
     if gameState == "start" then
@@ -80,6 +80,8 @@ function love.draw()
     ball:render()
     paddle1:render()
     paddle2:render()
+
+    displayFPS()
 
     push:apply("end")
 end
@@ -105,4 +107,11 @@ function resetGame()
     paddle2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
 
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
+end
+
+function displayFPS()
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.setFont(smallFont)
+    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 40, 20)
+    love.graphics.setColor(1, 1, 1, 1)
 end

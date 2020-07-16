@@ -15,6 +15,7 @@ PADDLE_SPEED = 200
 
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest") -- Removes blur from default filter
+    love.window.setTitle("Pong")
 
     smallFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 8)
     scoreFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 16)
@@ -71,7 +72,7 @@ function love.update(dt)
 
     -- Player 2 controls
     if love.keyboard.isDown("up") then
-        paddle2.dy = - PADDLE_SPEED
+        paddle2.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown("down") then
         paddle2.dy = PADDLE_SPEED
     else
@@ -94,9 +95,9 @@ function love.draw()
     love.graphics.setFont(smallFont)
 
     if gameState == "start" then
-        love.graphics.printf("State = Start!", 0, 20, VIRTUAL_WIDTH, "center") 
+        love.graphics.printf("Press Space to start!", 0, 20, VIRTUAL_WIDTH, "center") 
     else
-        love.graphics.printf("State = Play!", 0, 20, VIRTUAL_WIDTH, "center")
+        love.graphics.printf("Hits = " .. tostring (ball.hitCounter - 1), 0, 20, VIRTUAL_WIDTH, "center")
     end
 
     love.graphics.setFont(scoreFont)
@@ -129,8 +130,8 @@ function resetGame()
     player1Score = 0
     player2Score = 0
 
-    paddle1 = Paddle(5, 20, 5, 20)
-    paddle2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
+    paddle1 = Paddle(5, VIRTUAL_HEIGHT / 2 - 10, 5, 20)
+    paddle2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT / 2 - 10, 5, 20)
 
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 end
@@ -138,6 +139,6 @@ end
 function displayFPS()
     love.graphics.setColor(0, 1, 0, 1)
     love.graphics.setFont(smallFont)
-    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 40, 20)
+    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 0, 0)
     love.graphics.setColor(1, 1, 1, 1) -- set colour back to white for other objects being drawn
 end

@@ -23,10 +23,13 @@ function love.load()
     player1Score = 0
     player2Score = 0
 
+    servingPlayer = math.random(2) == 1 and 1 or 2
+
     hitCounter = 0
     hiScore = 0
 
     resetGame()
+    gameState = "start"
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -65,10 +68,14 @@ function love.update(dt)
     -- Update scores
     if ball.x >= VIRTUAL_WIDTH - 4 then
         player1Score = player1Score + 1
+        servingPlayer = 2
         resetGame()
+        ball.dx = -100 -- Serve to player 2
     elseif ball.x <= 0 then
         player2Score = player2Score + 1
+        servingPlayer = 1
         resetGame()
+        ball.dx = 100 -- Serve to player 1
     end
 
     paddle1:update(dt)
@@ -109,8 +116,10 @@ function love.draw()
 
     if gameState == "start" then
         love.graphics.printf("PRESS SPACE TO START!", 0, 20, VIRTUAL_WIDTH, "center") 
+    elseif gameState == "serve" then
+        love.graphics.printf("PLAYER " .. tostring (servingPlayer) .. " TO SERVE!", 0, 20, VIRTUAL_WIDTH, "center")
     else
-        love.graphics.printf("Hits = " .. tostring (hitCounter), 0, 20, VIRTUAL_WIDTH, "center")
+        love.graphics.printf("HITS = " .. tostring (hitCounter), 0, 20, VIRTUAL_WIDTH, "center")
     end
 
     love.graphics.setFont(scoreFont)
@@ -132,16 +141,24 @@ function love.keypressed(key)
         love.event.quit()
     elseif key == "space" then
         if gameState == "start" then
+            gameState = "serve"
+        elseif gameState == "serve" then
             gameState = "play"
         end
     end
 end
 
 function resetGame()
-    gameState = "start"
+    gameState = "serve"
     paddle1 = Paddle(5, VIRTUAL_HEIGHT / 2 - 10, 5, 20)
     paddle2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT / 2 - 10, 5, 20)
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
+
+    if servingPlayer == 1 then
+        ball.dx = 100
+    else
+        ball.dx = -100
+    end
 
     if hiScore < hitCounter then
         hiScore = hitCounter
@@ -153,13 +170,13 @@ end
 function displayFPS()
     love.graphics.setColor(0, 1, 0, 1)
     love.graphics.setFont(smallFont)
-    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 0, 0)
-    love.graphics.setColor(1, 1, 1, 1) -- Det colour back to white for other objects being drawn
+    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 15, 0)
+    love.graphics.setColor(1, 1, 1, 1) -- Set colour back to white for other objects being drawn
 end
 
 function displayHiScore()
     love.graphics.setColor(0, 0, 1, 1)
     love.graphics.setFont(smallFont)
-    love.graphics.print("HI-SCORE: " .. tostring (hiScore), VIRTUAL_WIDTH - 110, 0)
+    love.graphics.print("HI-SCORE:" .. tostring (hiScore), VIRTUAL_WIDTH - 100, 0)
     love.graphics.setColor(1, 1, 1, 1)
 end

@@ -31,6 +31,23 @@ function love.load()
 end
 
 function love.update(dt)
+    if ball:collides(paddle1) or ball:collides(paddle2) then
+        -- deflect ball to the opposite direction
+        ball.dx = -ball.dx
+    end
+
+    if ball.y <= 0 then
+        -- deflect ball down and reset its position if it moves out of bounds
+        ball.y = 0
+        ball.dy = -ball.dy
+    end
+
+    if ball.y >= VIRTUAL_HEIGHT - 4 then
+        -- deflect ball up and reset its position if it moves out of bounds
+        ball.y = VIRTUAL_HEIGHT - 4
+        ball.dy = -ball.dy
+    end
+
     paddle1:update(dt)
     paddle2:update(dt)
 
@@ -64,7 +81,7 @@ function love.draw()
     -- Change canvas colour with RGBA manipulation
     -- Each value (Red, Green, Blue, Alpha) is divided by 255 as LOVE uses a scale of 0-1.
     love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
-    
+
     love.graphics.setFont(smallFont)
 
     if gameState == "start" then
@@ -113,5 +130,5 @@ function displayFPS()
     love.graphics.setColor(0, 1, 0, 1)
     love.graphics.setFont(smallFont)
     love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 40, 20)
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setColor(1, 1, 1, 1) -- set colour back to white for other objects being drawn
 end

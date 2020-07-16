@@ -53,8 +53,7 @@ function love.update(dt)
     end
 
     if gameState == "play" then
-        ballX = ballX + ballDX * dt
-        ballY = ballY + ballDY * dt
+        ball:update(dt)
     end
 
 end
@@ -78,7 +77,7 @@ function love.draw()
     love.graphics.print(player1Score, VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 5)
     love.graphics.print(player2Score, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 5)
 
-    love.graphics.rectangle("fill", ballX, ballY, 4, 4) -- Ball
+    ball:render()
     paddle1:render()
     paddle2:render()
 
@@ -105,13 +104,5 @@ function resetGame()
     paddle1 = Paddle(5, 20, 5, 20)
     paddle2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
 
-    player1X = 5
-    player2X = VIRTUAL_WIDTH - 10
-
-    ballX = VIRTUAL_WIDTH / 2 - 2
-    ballY = VIRTUAL_HEIGHT / 2 - 2
-
-    -- "DX" means delta of x, i.e. the velocity of the ball across the two axes
-    ballDX = math.random(2) == 1 and -100 or 100
-    ballDY = math.random(-50, 50)
+    ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 end

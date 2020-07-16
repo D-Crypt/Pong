@@ -31,9 +31,18 @@ function love.load()
 end
 
 function love.update(dt)
-    if ball:collides(paddle1) or ball:collides(paddle2) then
+    if ball:collides(paddle1) or ball:collides(paddle2) then  
+        -- Speed up ball based on how many times it has been hit      
+        if ball.dx < 0 then
+            ball.dx = ball.dx - ball.hitCounter
+        else
+            ball.dx = ball.dx + ball.hitCounter
+        end
+
         -- deflect ball to the opposite direction
         ball.dx = -ball.dx
+
+        ball.hitCounter = ball.hitCounter + 1
     end
 
     if ball.y <= 0 then

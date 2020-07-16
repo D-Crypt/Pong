@@ -8,6 +8,7 @@ function Ball:init(x, y, width, height)
     -- "DX" means delta of x, i.e. the velocity of the ball across the two axes
     self.dx = math.random(2) == 1 and -100 or 100
     self.dy = math.random(-50, 50)
+    self.hitCounter = 1
 end
 
 function Ball:update(dt)

@@ -1,3 +1,9 @@
+Class = require "class"
+push = require "push"
+
+require "Ball"
+require "Paddle"
+
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
@@ -6,8 +12,6 @@ VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
 PADDLE_SPEED = 200
-
-push = require "push"
 
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -27,19 +31,25 @@ function love.load()
 end
 
 function love.update(dt)
+    paddle1:update(dt)
+    paddle2:update(dt)
+
     -- Player 1 controls
     if love.keyboard.isDown("w") then
-        -- The max and min functions prevenetGame from moving beyond the canvas boundaries
-        player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
+        paddle1.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown("s") then
-        player1Y = math.min(VIRTUAL_HEIGHT - 20, player1Y + PADDLE_SPEED * dt)
+        paddle1.dy = PADDLE_SPEED
+    else
+        paddle1.dy = 0
     end
 
     -- Player 2 controls
     if love.keyboard.isDown("up") then
-        player2Y = math.max(0, player2Y - PADDLE_SPEED * dt)
+        paddle2.dy = - PADDLE_SPEED
     elseif love.keyboard.isDown("down") then
-        player2Y = math.min(VIRTUAL_HEIGHT - 20, player2Y + PADDLE_SPEED * dt)
+        paddle2.dy = PADDLE_SPEED
+    else
+        paddle2.dy = 0
     end
 
     if gameState == "play" then
@@ -69,8 +79,8 @@ function love.draw()
     love.graphics.print(player2Score, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 5)
 
     love.graphics.rectangle("fill", ballX, ballY, 4, 4) -- Ball
-    love.graphics.rectangle("fill", player1X, player1Y, 5, 20) -- Left paddle
-    love.graphics.rectangle("fill", player2X, player2Y, 5, 20) -- Right paddle
+    paddle1:render()
+    paddle2:render()
 
     push:apply("end")
 end
@@ -92,8 +102,8 @@ function resetGame()
     player1Score = 0
     player2Score = 0
 
-    player1Y = 40
-    player2Y = VIRTUAL_HEIGHT - 60
+    paddle1 = Paddle(5, 20, 5, 20)
+    paddle2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
 
     player1X = 5
     player2X = VIRTUAL_WIDTH - 10

@@ -37,6 +37,7 @@ function love.load()
 
     resetGame()
     gameState = "start"
+    --AI = true
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -113,6 +114,10 @@ function love.update(dt)
 
     paddle1:update(dt)
     paddle2:update(dt)
+
+    --[[if AI == true then
+        paddle2.y = ball.y
+    end]]--
 
     -- Player 1 controls
     if love.keyboard.isDown("w") then

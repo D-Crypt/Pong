@@ -20,6 +20,12 @@ function love.load()
     smallFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 8)
     scoreFont = love.graphics.newFont("Fonts/PressStart2P.ttf", 16)
 
+    sounds = {
+        ["hit_paddle"] = love.audio.newSource("Sounds/hit_paddle.wav", "static"),
+        ["hit_wall"] = love.audio.newSource("Sounds/hit_wall.wav", "static"),
+        ["score"] = love.audio.newSource("Sounds/score.wav", "static")
+    }
+
     player1Score = 0
     player2Score = 0
 
@@ -41,6 +47,8 @@ end
 
 function love.update(dt)
     if ball:collides(paddle1) or ball:collides(paddle2) then  
+        sounds["hit_paddle"]:play()
+
         -- Speed up ball based on how many times it has been hit      
         if ball.dx < 0 then
             ball.dx = ball.dx - hitCounter
@@ -55,19 +63,23 @@ function love.update(dt)
     end
 
     if ball.y <= 0 then
+        sounds["hit_wall"]:play()
+
         -- Deflect ball down and reset its position if it moves out of bounds
         ball.y = 0
         ball.dy = -ball.dy
     end
 
     if ball.y >= VIRTUAL_HEIGHT - 4 then
+        sounds["hit_wall"]:play()
+
         -- Deflect ball up and reset its position if it moves out of bounds
         ball.y = VIRTUAL_HEIGHT - 4
         ball.dy = -ball.dy
     end
 
-    -- Update scores
     if ball.x >= VIRTUAL_WIDTH - 4 then
+        sounds["score"]:play()
         player1Score = player1Score + 1
 
         if player1Score == 3 then
@@ -81,6 +93,7 @@ function love.update(dt)
         end
 
     elseif ball.x <= 0 then
+        sounds["score"]:play()
         player2Score = player2Score + 1
 
         if player2Score == 3 then

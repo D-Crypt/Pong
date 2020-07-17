@@ -24,6 +24,7 @@ function love.load()
     player2Score = 0
 
     servingPlayer = math.random(2) == 1 and 1 or 2
+    winningPlayer = 0
 
     hitCounter = 0
     hiScore = 0
@@ -68,14 +69,29 @@ function love.update(dt)
     -- Update scores
     if ball.x >= VIRTUAL_WIDTH - 4 then
         player1Score = player1Score + 1
-        servingPlayer = 2
-        resetGame()
-        ball.dx = -100 -- Serve to player 2
+
+        if player1Score == 3 then
+            resetGame()
+            gameState = "victory"
+            winningPlayer = 1
+        else
+            resetGame()
+            servingPlayer = 2
+            ball.dx = -100 -- Serve to player 2
+        end
+
     elseif ball.x <= 0 then
         player2Score = player2Score + 1
-        servingPlayer = 1
-        resetGame()
-        ball.dx = 100 -- Serve to player 1
+
+        if player2Score == 3 then
+            resetGame()
+            gameState = "victory"
+            winningPlayer = 2
+        else
+            resetGame()
+            servingPlayer = 1
+            ball.dx = 100 -- Serve to player 1
+        end
     end
 
     paddle1:update(dt)
@@ -118,6 +134,11 @@ function love.draw()
         love.graphics.printf("PRESS SPACE TO START!", 0, 20, VIRTUAL_WIDTH, "center") 
     elseif gameState == "serve" then
         love.graphics.printf("PLAYER " .. tostring (servingPlayer) .. " TO SERVE!", 0, 20, VIRTUAL_WIDTH, "center")
+    elseif gameState == "victory" then
+        -- Victory message
+        love.graphics.setFont(scoreFont)
+        love.graphics.printf("PLAYER " .. tostring (winningPlayer) .. " WINS!", 0, 20, VIRTUAL_WIDTH, "center")
+        love.graphics.setFont(smallFont)
     else
         love.graphics.printf("HITS = " .. tostring (hitCounter), 0, 20, VIRTUAL_WIDTH, "center")
     end
@@ -144,6 +165,10 @@ function love.keypressed(key)
             gameState = "serve"
         elseif gameState == "serve" then
             gameState = "play"
+        elseif gameState == "victory" then
+            player1Score = 0
+            player2Score = 0
+            gameState = "start"
         end
     end
 end

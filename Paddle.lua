@@ -9,7 +9,7 @@ function Paddle:init(x, y, width, height)
 end
 
 function Paddle:update(dt)
-    -- The max and min functions prevent objects from moving beyond the canvas boundaries
+    -- The max and min functions prevent the paddles from moving beyond the canvas boundaries
     if self.dy < 0 then
         self.y = math.max(0, self.y + self.dy * dt)
     elseif self.dy > 0 then
